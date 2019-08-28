@@ -405,8 +405,8 @@ public class AgoraRtcEnginePlugin implements MethodCallHandler {
 
             case "startAudioMixing": {
                 String filePath = call.argument("filePath");
-                Boolean loopback = call.argument("loopback");
-                Boolean replace = call.argument("replace");
+                boolean loopback = call.argument("loopback");
+                boolean replace = call.argument("replace");
                 int cycle = call.argument("cycle");
                 mRtcEngine.startAudioMixing(filePath,loopback, replace, cycle);
                 result.success(null);

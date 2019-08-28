@@ -371,7 +371,7 @@ class AgoraRtcEngine {
           'filePath': filePath,
           'loopback': loopback,
           'replace': replace,
-          cycle: cycle,
+          'cycle': cycle,
         });
   }
 

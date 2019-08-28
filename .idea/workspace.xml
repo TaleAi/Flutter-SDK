@@ -4,6 +4,7 @@
     <list default="true" id="ec5dab9a-c102-4919-a6bb-bede6a82e1c8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/io/agora/agorartcengine/AgoraRtcEnginePlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/io/agora/agorartcengine/AgoraRtcEnginePlugin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/agora_rtc_engine.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/agora_rtc_engine.dart" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
     <ignored path="$PROJECT_DIR$/.idea/" />
@@ -19,16 +20,36 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/lib/agora_rtc_engine.dart">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="917">
+              <caret line="373" column="16" selection-start-line="373" selection-start-column="16" selection-end-line="373" selection-end-column="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/android/src/main/java/io/agora/agorartcengine/AgoraRendererView.java">
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/android/src/main/java/io/agora/agorartcengine/AgoraRtcEnginePlugin.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="273">
-              <caret line="475" column="41" lean-forward="true" selection-start-line="475" selection-start-column="41" selection-end-line="475" selection-end-column="41" />
+            <state relative-caret-position="391">
+              <caret line="407" column="23" selection-start-line="407" selection-start-column="16" selection-end-line="407" selection-end-column="23" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/src/agora_render_widget.dart">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1207">
+              <folding>
+                <element signature="e#0#56#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -43,6 +64,9 @@
       <find>onAudioMixingStateChanged</find>
       <find>onJoinChannelSuccess</find>
       <find>Future&lt;int&gt;</find>
+      <find>'</find>
+      <find>filePa</find>
+      <find>boolean</find>
     </findStrings>
     <replaceStrings>
       <replace>&quot;</replace>
@@ -54,9 +78,9 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/lib/agora_rtc_engine.dart" />
         <option value="$PROJECT_DIR$/pubspec.yaml" />
         <option value="$PROJECT_DIR$/android/src/main/java/io/agora/agorartcengine/AgoraRtcEnginePlugin.java" />
+        <option value="$PROJECT_DIR$/lib/agora_rtc_engine.dart" />
       </list>
     </option>
   </component>
@@ -116,23 +140,13 @@
             <path>
               <item name="Flutter-SDK" type="b2602c69:ProjectViewProjectNode" />
               <item name="Flutter-SDK" type="462c0819:PsiDirectoryNode" />
-              <item name="android" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="io" type="462c0819:PsiDirectoryNode" />
-              <item name="agora" type="462c0819:PsiDirectoryNode" />
+              <item name="lib" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Flutter-SDK" type="b2602c69:ProjectViewProjectNode" />
               <item name="Flutter-SDK" type="462c0819:PsiDirectoryNode" />
-              <item name="android" type="462c0819:PsiDirectoryNode" />
+              <item name="lib" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="io" type="462c0819:PsiDirectoryNode" />
-              <item name="agora" type="462c0819:PsiDirectoryNode" />
-              <item name="agorartcengine" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -191,7 +205,21 @@
       <option name="project" value="LOCAL" />
       <updated>1566975949288</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="添加音频播放">
+      <created>1566981499880</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1566981499880</updated>
+    </task>
+    <task id="LOCAL-00005" summary="添加音频播放">
+      <created>1566981635628</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1566981635628</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -238,20 +266,29 @@
     <entry file="file://$PROJECT_DIR$/agora_rtc_engine.iml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/agora_rtc_engine.dart">
+    <entry file="file://$PROJECT_DIR$/lib/src/agora_render_widget.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="647">
-          <caret line="393" column="32" lean-forward="true" selection-start-line="393" selection-start-column="32" selection-end-line="393" selection-end-column="32" />
+        <state relative-caret-position="-1207">
+          <folding>
+            <element signature="e#0#56#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/src/main/java/io/agora/agorartcengine/AgoraRtcEnginePlugin.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="407" column="23" selection-start-line="407" selection-start-column="16" selection-end-line="407" selection-end-column="23" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/android/src/main/java/io/agora/agorartcengine/AgoraRendererView.java">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/android/src/main/java/io/agora/agorartcengine/AgoraRtcEnginePlugin.java">
+    <entry file="file://$PROJECT_DIR$/lib/agora_rtc_engine.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="273">
-          <caret line="475" column="41" lean-forward="true" selection-start-line="475" selection-start-column="41" selection-end-line="475" selection-end-column="41" />
+        <state relative-caret-position="917">
+          <caret line="373" column="16" selection-start-line="373" selection-start-column="16" selection-end-line="373" selection-end-column="16" />
         </state>
       </provider>
     </entry>
