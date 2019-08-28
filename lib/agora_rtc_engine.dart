@@ -364,52 +364,68 @@ class AgoraRtcEngine {
   ///
   /// 个人实现
   static Future<void> startAudioMixing(String filePath, bool loopback,
-      bool replace, {int cycle = -1}) {
-
+      bool replace, {int cycle = -1}) async {
+    await _channel.invokeMethod(
+        'startAudioMixing',
+        {'filePath': filePath: 'loopback': loopback, 'replace': replace, cycle: cycle,});
   }
 
-  static Future<void> stopAudioMixing() {
-
+  static Future<void> stopAudioMixing() async {
+    await _channel.invokeMethod(
+        'stopAudioMixing');
   }
 
-  static Future<void> pauseAudioMixing() {
-
+  static Future<void> pauseAudioMixing() async {
+    await _channel.invokeMethod(
+        'pauseAudioMixing');
   }
 
-  static Future<void> resumeAudioMixing() {
-
+  static Future<void> resumeAudioMixing() async {
+    await _channel.invokeMethod(
+        'resumeAudioMixing');
   }
 
-  static Future<void> adjustAudioMixingVolume(int volume) {
-
+  static Future<void> adjustAudioMixingVolume(int volume) async {
+    await _channel.invokeMethod(
+        'adjustAudioMixingVolume');
   }
 
-  static Future<void> adjustAudioMixingPlayoutVolume(int volume) {
-
+  static Future<void> adjustAudioMixingPlayoutVolume(int volume) async {
+    await _channel.invokeMethod(
+        'adjustAudioMixingPlayoutVolume',{'volume': volume});
   }
 
-  static Future<void> adjustAudioMixingPublishVolume(int volume) {
-
+  static Future<void> adjustAudioMixingPublishVolume(int volume) async {
+    await _channel.invokeMethod(
+        'adjustAudioMixingPublishVolume',{'volume': volume});
   }
 
-  static Future<int> getAudioMixingPlayoutVolume() {
-
+  static Future<int> getAudioMixingPlayoutVolume() async {
+    final int volume = await _channel.invokeMethod(
+        'getAudioMixingPlayoutVolume');
+    return volume;
   }
 
-  static Future<int> getAudioMixingPublishVolume() {
-
+  static Future<int> getAudioMixingPublishVolume() async {
+    final int volume = await _channel.invokeMethod(
+        'getAudioMixingPublishVolume');
   }
 
-  static Future<int> getAudioMixingDuration() {
-
+  static Future<int> getAudioMixingDuration() async {
+    final int volume = await _channel.invokeMethod(
+        'getAudioMixingDuration');
+    return volume;
   }
 
-  static Future<int> getAudioMixingCurrentPosition() {
-
+  static Future<int> getAudioMixingCurrentPosition() async {
+    final int pos = await _channel.invokeMethod(
+        'getAudioMixingCurrentPosition');
+    return pos;
   }
 
-  static Future<int> setAudioMixingPosition(int pos) {
-
+  static Future<int> setAudioMixingPosition(int pos) async {
+    await _channel.invokeMethod(
+        'setAudioMixingPosition',{'pos': pos});
   }
 
   /// Receives/Stops receiving a specified audio stream.
@@ -915,7 +931,7 @@ class AgoraRtcEngine {
           }
           break;
         case 'onAudioMixingStateChanged':
-          if(onAudioMixingStateChanged != null) {
+          if (onAudioMixingStateChanged != null) {
             onAudioMixingStateChanged(values['state'], values['errorCode']);
           }
           break;

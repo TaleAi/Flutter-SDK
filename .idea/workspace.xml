@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ec5dab9a-c102-4919-a6bb-bede6a82e1c8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/agora_rtc_engine.iml" beforeDir="false" afterPath="$PROJECT_DIR$/agora_rtc_engine.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/io/agora/agorartcengine/AgoraRtcEnginePlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/io/agora/agorartcengine/AgoraRtcEnginePlugin.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/agora_rtc_engine.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/agora_rtc_engine.dart" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
@@ -21,30 +19,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/agora_rtc_engine.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="254">
-              <caret line="918" column="38" selection-start-line="918" selection-start-column="38" selection-end-line="918" selection-end-column="38" />
+            <state relative-caret-position="-1216">
+              <caret line="370" column="3" lean-forward="true" selection-start-line="370" selection-start-column="3" selection-end-line="370" selection-end-column="3" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/android/src/main/java/io/agora/agorartcengine/AgoraRtcEnginePlugin.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="386">
               <caret line="479" column="40" selection-start-line="479" selection-start-column="40" selection-end-line="479" selection-end-column="40" />
-              <folding>
-                <element signature="e#41454#41455#0" expanded="true" />
-                <element signature="e#41527#41528#0" expanded="true" />
-                <element signature="e#42040#42041#0" expanded="true" />
-                <element signature="e#42103#42104#0" expanded="true" />
-                <element signature="e#42387#42388#0" expanded="true" />
-                <element signature="e#42481#42482#0" expanded="true" />
-                <element signature="e#42670#42671#0" expanded="true" />
-                <element signature="e#42734#42735#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -63,6 +51,7 @@
       <find>onLocalVideoStateChanged</find>
       <find>onAudioMixingStateChanged</find>
       <find>onJoinChannelSuccess</find>
+      <find>Future&lt;int&gt;</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -77,9 +66,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="y" value="23" />
-    <option name="width" value="1440" />
-    <option name="height" value="797" />
+    <option name="x" value="1440" />
+    <option name="y" value="-31" />
+    <option name="width" value="2560" />
+    <option name="height" value="1417" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -174,59 +164,61 @@
       <option name="presentableId" value="Default" />
       <updated>1566965132932</updated>
     </task>
+    <task id="LOCAL-00001" summary="添加音频播放">
+      <created>1566970368056</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1566970368056</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="797" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Designer" />
-      <window_info id="Structure" side_tool="true" />
-      <window_info id="Image Layers" />
-      <window_info id="Resources Explorer" />
-      <window_info id="Capture Tool" />
-      <window_info id="Favorites" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2532189" />
-      <window_info anchor="bottom" id="Run" />
-      <window_info anchor="bottom" id="TODO" />
-      <window_info anchor="bottom" id="Statistic" />
-      <window_info anchor="bottom" id="Debug" />
-      <window_info anchor="bottom" id="Terminal" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
-      <window_info anchor="bottom" id="Flutter Performance" side_tool="true" />
-      <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="right" id="Capture Analysis" />
-      <window_info anchor="right" id="Theme Preview" />
-      <window_info anchor="right" id="Flutter Inspector" />
-      <window_info anchor="right" id="Flutter Outline" />
-      <window_info anchor="right" id="Palette&#9;" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25679544" />
+      <window_info id="Designer" order="1" />
+      <window_info id="Structure" order="2" side_tool="true" />
+      <window_info id="Image Layers" order="3" />
+      <window_info id="Resources Explorer" order="4" />
+      <window_info id="Capture Tool" order="5" />
+      <window_info id="Favorites" order="6" side_tool="true" />
+      <window_info anchor="bottom" id="Run" order="0" />
+      <window_info anchor="bottom" id="TODO" order="1" />
+      <window_info anchor="bottom" id="Statistic" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" />
+      <window_info anchor="bottom" id="Terminal" order="4" />
+      <window_info anchor="bottom" id="Event Log" order="5" side_tool="true" />
+      <window_info anchor="bottom" id="Flutter Performance" order="6" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="right" id="Capture Analysis" order="0" />
+      <window_info anchor="right" id="Theme Preview" order="1" />
+      <window_info anchor="right" id="Flutter Inspector" order="2" />
+      <window_info anchor="right" id="Flutter Outline" order="3" />
+      <window_info anchor="right" id="Palette&#9;" order="4" />
     </layout>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="添加音频播放" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加音频播放" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/agora_rtc_engine.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="254">
-          <caret line="918" column="38" selection-start-line="918" selection-start-column="38" selection-end-line="918" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/android/src/main/java/io/agora/agorartcengine/AgoraRtcEnginePlugin.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="386">
           <caret line="479" column="40" selection-start-line="479" selection-start-column="40" selection-end-line="479" selection-end-column="40" />
-          <folding>
-            <element signature="e#41454#41455#0" expanded="true" />
-            <element signature="e#41527#41528#0" expanded="true" />
-            <element signature="e#42040#42041#0" expanded="true" />
-            <element signature="e#42103#42104#0" expanded="true" />
-            <element signature="e#42387#42388#0" expanded="true" />
-            <element signature="e#42481#42482#0" expanded="true" />
-            <element signature="e#42670#42671#0" expanded="true" />
-            <element signature="e#42734#42735#0" expanded="true" />
-          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/agora_rtc_engine.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1216">
+          <caret line="370" column="3" lean-forward="true" selection-start-line="370" selection-start-column="3" selection-end-line="370" selection-end-column="3" />
         </state>
       </provider>
     </entry>
