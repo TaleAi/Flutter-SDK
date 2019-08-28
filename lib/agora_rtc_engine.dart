@@ -392,7 +392,7 @@ class AgoraRtcEngine {
 
   static Future<void> adjustAudioMixingVolume(int volume) async {
     await _channel.invokeMethod(
-        'adjustAudioMixingVolume', {'volume': volume}));
+        'adjustAudioMixingVolume', {'volume': volume});
   }
 
   static Future<void> adjustAudioMixingPlayoutVolume(int volume) async {
