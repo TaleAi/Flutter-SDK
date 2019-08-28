@@ -24,13 +24,13 @@ class AgoraRtcEngine {
   /// The channel name assignment is based on channelName specified in the [joinChannel] method.
   /// If the uid is not specified when [joinChannel] is called, the server automatically assigns a uid.
   static void Function(String channel, int uid, int elapsed)
-      onJoinChannelSuccess;
+  onJoinChannelSuccess;
 
   /// Occurs when a user rejoins the channel after being disconnected due to network problems.
   ///
   /// When a user loses connection with the server because of network problems, the SDK automatically tries to reconnect and triggers this callback upon reconnection.
   static void Function(String channel, int uid, int elapsed)
-      onRejoinChannelSuccess;
+  onRejoinChannelSuccess;
 
   /// Occurs when a user leaves the channel.
   ///
@@ -39,7 +39,7 @@ class AgoraRtcEngine {
 
   /// Occurs when the user role switches in a live broadcast.
   static void Function(ClientRole oldRole, ClientRole newRole)
-      onClientRoleChanged;
+  onClientRoleChanged;
 
   /// Occurs when a remote user (Communication)/host (Live Broadcast) joins the channel.
   ///
@@ -84,7 +84,7 @@ class AgoraRtcEngine {
   ///
   /// This callback reports the ID and volume of the loudest speakers at the moment in the channel. This callback is disabled by default and can be enabled by the [enableAudioVolumeIndication] method.
   static void Function(int totalVolume, List<AudioVolumeInfo> speakers)
-      onAudioVolumeIndication;
+  onAudioVolumeIndication;
 
   /// Reports which user is the loudest speaker.
   ///
@@ -104,19 +104,19 @@ class AgoraRtcEngine {
   ///
   /// This callback is triggered after the first local video frame is rendered on the video window.
   static void Function(int width, int height, int elapsed)
-      onFirstLocalVideoFrame;
+  onFirstLocalVideoFrame;
 
   /// Occurs when the first remote video frame is decoded.
   ///
   /// This callback is triggered after the first frame of the remote video is received and decoded. The app can configure the user view settings with this callback.
   static void Function(int uid, int width, int height, int elapsed)
-      onFirstRemoteVideoDecoded;
+  onFirstRemoteVideoDecoded;
 
   /// Occurs when the first remote video frame is rendered.
   ///
   /// This callback is triggered after the first frame of the remote video is rendered on the video window. The application can retrieve the data of the time elapsed from the user joining the channel until the first video frame is displayed.
   static void Function(int uid, int width, int height, int elapsed)
-      onFirstRemoteVideoFrame;
+  onFirstRemoteVideoFrame;
 
   /// Occurs when a remote user's audio stream is muted/unmuted.
   static void Function(int uid, bool muted) onUserMuteAudio;
@@ -136,7 +136,7 @@ class AgoraRtcEngine {
 
   /// Occurs when the video size or rotation information of a specified remote user changes.
   static void Function(int uid, double width, double height, int rotation)
-      onVideoSizeChanged;
+  onVideoSizeChanged;
 
   /// Occurs when the remote video stream state changes.
   static void Function(int uid, int state) onRemoteVideoStateChanged;
@@ -146,13 +146,13 @@ class AgoraRtcEngine {
   ///
   /// If you call [setLocalPublishFallbackOption] and set option as STREAM_FALLBACK_OPTION_AUDIO_ONLY(2), this callback is triggered when the locally published stream falls back to audio-only mode due to poor uplink conditions, or when the audio stream switches back to the video after the uplink network condition improves.
   static void Function(bool isFallbackOrRecover)
-      onLocalPublishFallbackToAudioOnly;
+  onLocalPublishFallbackToAudioOnly;
 
   /// Occurs when the subscribed media stream falls back to audio-only stream due to poor network conditions or switches back to video stream after the network conditions improve.
   ///
   /// If you call [setRemoteSubscribeFallbackOption] and set option as STREAM_FALLBACK_OPTION_AUDIO_ONLY(2), this callback is triggered when the remotely subscribed media stream falls back to audio-only mode due to poor uplink conditions, or when the remotely subscribed media stream switches back to the video after the uplink network condition improves.
   static void Function(int uid, bool isFallbackOrRecover)
-      onRemoteSubscribeFallbackToAudioOnly;
+  onRemoteSubscribeFallbackToAudioOnly;
 
   // Device Events
   /// Occurs when the local audio pkayout route changes.
@@ -164,8 +164,8 @@ class AgoraRtcEngine {
   ///
   /// The SDK returns the current video state in this callback.
   static void Function(
-          LocalVideoStreamState localVideoState, LocalVideoStreamError error)
-      onLocalVideoStateChanged;
+      LocalVideoStreamState localVideoState, LocalVideoStreamError error)
+  onLocalVideoStateChanged;
 
   // Statistics Events
   /// Reports the statistics of the audio stream from each remote user/host.
@@ -195,13 +195,15 @@ class AgoraRtcEngine {
   ///
   /// This callback reports the transport-layer statistics, such as the packet loss rate and time delay, once every two seconds after the local user receives an audio packet from a remote user.
   static void Function(int uid, int delay, int lost, int rxKBitRate)
-      onRemoteAudioTransportStats;
+  onRemoteAudioTransportStats;
 
   /// Reports the transport-layer statistics of each remote video stream.
   ///
   /// This callback reports the transport-layer statistics, such as the packet loss rate and time delay, once every two seconds after the local user receives the video packet from a remote user.
   static void Function(int uid, int delay, int lost, int rxKBitRate)
-      onRemoteVideoTransportStats;
+  onRemoteVideoTransportStats;
+
+  static void Function(int state, int errorCode) onAudioMixingStateChanged;
 
   // Miscellaneous Events
   /// Occurs when the media engine is loaded.
@@ -236,7 +238,8 @@ class AgoraRtcEngine {
   /// Before calling this method to set a new channel profile, [destroy] the current RtcEngine and [create] a new RtcEngine first.
   /// Call this method before [joinChannel], you cannot configure the channel profile when the channel is in use.
   static Future<void> setChannelProfile(ChannelProfile profile) async {
-    await _channel.invokeMethod('setChannelProfile', {'profile': profile.index});
+    await _channel.invokeMethod(
+        'setChannelProfile', {'profile': profile.index});
   }
 
   /// Sets the role of a user (Live Broadcast only).
@@ -253,8 +256,8 @@ class AgoraRtcEngine {
   /// Users in the same channel can talk to each other, and multiple users in the same channel can start a group chat. Users with different App IDs cannot call each other.
   /// You must call the [leaveChannel] method to exit the current call before joining another channel.
   /// A channel does not accept duplicate uids, such as two users with the same uid. If you set uid as 0, the system automatically assigns a uid.
-  static Future<bool> joinChannel(
-      String token, String channelId, String info, int uid) async {
+  static Future<bool> joinChannel(String token, String channelId, String info,
+      int uid) async {
     final bool success = await _channel.invokeMethod('joinChannel',
         {'token': token, 'channelId': channelId, 'info': info, 'uid': uid});
     return success;
@@ -279,7 +282,8 @@ class AgoraRtcEngine {
   ///
   /// Use this method when the channel profile is Live Broadcast. Interoperability with the Agora Web SDK is enabled by default when the channel profile is Communication.
   static Future<void> enableWebSdkInteroperability(bool enabled) async {
-    await _channel.invokeMethod('enableWebSdkInteroperability', {'enabled': enabled});
+    await _channel.invokeMethod(
+        'enableWebSdkInteroperability', {'enabled': enabled});
   }
 
   /// Gets the connection state of the SDK.
@@ -312,8 +316,8 @@ class AgoraRtcEngine {
   /// Sets the audio parameters and application scenarios.
   ///
   /// You must call this method before calling the [joinChannel] method.
-  static Future<void> setAudioProfile(
-      AudioProfile profile, AudioScenario scenario) async {
+  static Future<void> setAudioProfile(AudioProfile profile,
+      AudioScenario scenario) async {
     await _channel.invokeMethod('setAudioProfile',
         {'profile': profile.index, 'scenario': scenario.index});
   }
@@ -333,8 +337,8 @@ class AgoraRtcEngine {
   /// Enables the [onAudioVolumeIndication] callback at a set time interval to report on which users are speaking and the speakers' volume.
   ///
   /// Once this method is enabled, the SDK returns the volume indication in the [onAudioVolumeIndication] callback at the set time interval, regardless of whether any user is speaking in the channel.
-  static Future<void> enableAudioVolumeIndication(
-      int interval, int smooth) async {
+  static Future<void> enableAudioVolumeIndication(int interval,
+      int smooth) async {
     await _channel.invokeMethod('enableAudioVolumeIndication',
         {'interval': interval, 'smooth': smooth});
   }
@@ -354,6 +358,58 @@ class AgoraRtcEngine {
   /// When muted is set as true, this method does not disable the microphone and thus does not affect any ongoing recording.
   static Future<void> muteLocalAudioStream(bool muted) async {
     await _channel.invokeMethod('muteLocalAudioStream', {'muted': muted});
+  }
+
+  /// 播放音效文件
+  ///
+  /// 个人实现
+  static Future<void> startAudioMixing(String filePath, bool loopback,
+      bool replace, {int cycle = -1}) {
+
+  }
+
+  static Future<void> stopAudioMixing() {
+
+  }
+
+  static Future<void> pauseAudioMixing() {
+
+  }
+
+  static Future<void> resumeAudioMixing() {
+
+  }
+
+  static Future<void> adjustAudioMixingVolume(int volume) {
+
+  }
+
+  static Future<void> adjustAudioMixingPlayoutVolume(int volume) {
+
+  }
+
+  static Future<void> adjustAudioMixingPublishVolume(int volume) {
+
+  }
+
+  static Future<int> getAudioMixingPlayoutVolume() {
+
+  }
+
+  static Future<int> getAudioMixingPublishVolume() {
+
+  }
+
+  static Future<int> getAudioMixingDuration() {
+
+  }
+
+  static Future<int> getAudioMixingCurrentPosition() {
+
+  }
+
+  static Future<int> setAudioMixingPosition(int pos) {
+
   }
 
   /// Receives/Stops receiving a specified audio stream.
@@ -380,8 +436,8 @@ class AgoraRtcEngine {
 
   // Video Pre-process and Post-process
   /// Enables/Disables image enhancement and sets the options.
-  static Future<void> setBeautyEffectOptions(
-      bool enabled, BeautyOptions options) async {
+  static Future<void> setBeautyEffectOptions(bool enabled,
+      BeautyOptions options) async {
     await _channel.invokeListMethod('setBeautyEffectOptions',
         {'enabled': enabled, 'options': options._jsonMap()});
   }
@@ -455,8 +511,8 @@ class AgoraRtcEngine {
   /// Sets the local video view and configures the video display settings on the local device.
   ///
   /// You can call this method to bind local video streams to Widget created by [createNativeView] of the  and configure the video display settings.
-  static Future<void> setupLocalVideo(
-      int viewId, VideoRenderMode renderMode) async {
+  static Future<void> setupLocalVideo(int viewId,
+      VideoRenderMode renderMode) async {
     await _channel.invokeMethod('setupLocalVideo',
         {'viewId': viewId, 'renderMode': _intFromVideoRenderMode(renderMode)});
   }
@@ -464,8 +520,8 @@ class AgoraRtcEngine {
   /// Sets the remote user's video view.
   ///
   /// This method binds the remote user to the Widget created by [createNativeView].
-  static Future<void> setupRemoteVideo(
-      int viewId, VideoRenderMode renderMode, int uid) async {
+  static Future<void> setupRemoteVideo(int viewId, VideoRenderMode renderMode,
+      int uid) async {
     await _channel.invokeMethod('setupRemoteVideo', {
       'viewId': viewId,
       'renderMode': _intFromVideoRenderMode(renderMode),
@@ -490,8 +546,8 @@ class AgoraRtcEngine {
   /// Sets the remote video display mode.
   ///
   /// This method can be invoked multiple times during a call to change the display mode.
-  static Future<void> setRemoteRenderMode(
-      int uid, VideoRenderMode renderMode) async {
+  static Future<void> setRemoteRenderMode(int uid,
+      VideoRenderMode renderMode) async {
     await _channel.invokeMethod('setRemoteRenderMode',
         {'uid': uid, 'mode': _intFromVideoRenderMode(renderMode)});
   }
@@ -574,8 +630,8 @@ class AgoraRtcEngine {
   /// Use this method with the [setRemoteSubscribeFallbackOption] method.
   /// If the fallback function is enabled for a remote stream, the SDK ensures the high-priority user gets the best possible stream quality.
   /// The Agora SDK supports setting userPriority as high for one user only.
-  static Future<void> setRemoteUserPriority(
-      int uid, UserPriority userPriority) async {
+  static Future<void> setRemoteUserPriority(int uid,
+      UserPriority userPriority) async {
     int priorityValue = 100;
     switch (userPriority) {
       case UserPriority.Normal:
@@ -670,7 +726,7 @@ class AgoraRtcEngine {
       Map values = call.arguments;
 
       switch (call.method) {
-        // Core Events
+      // Core Events
         case 'onWarning':
           if (onWarning != null) {
             onWarning(values['warn']);
@@ -745,7 +801,7 @@ class AgoraRtcEngine {
             onRequestToken();
           }
           break;
-        // Media Events
+      // Media Events
         case 'onMicrophoneEnabled':
           if (onMicrophoneEnabled != null) {
             onMicrophoneEnabled(values['enabled']);
@@ -757,7 +813,7 @@ class AgoraRtcEngine {
             List<AudioVolumeInfo> speakers = List<AudioVolumeInfo>();
             for (Map speakerValue in speakerValues) {
               AudioVolumeInfo info =
-                  AudioVolumeInfo(speakerValue['uid'], speakerValue['volume']);
+              AudioVolumeInfo(speakerValue['uid'], speakerValue['volume']);
               speakers.add(info);
             }
             onAudioVolumeIndication(values['totalVolume'], speakers);
@@ -833,7 +889,7 @@ class AgoraRtcEngine {
             onRemoteVideoStateChanged(values['uid'], values['state']);
           }
           break;
-        // Fallback Events
+      // Fallback Events
         case 'onLocalPublishFallbackToAudioOnly':
           if (onLocalPublishFallbackToAudioOnly != null) {
             onLocalPublishFallbackToAudioOnly(values['isFallbackOrRecover']);
@@ -846,7 +902,7 @@ class AgoraRtcEngine {
           }
           break;
 
-        // Device Events
+      // Device Events
         case 'onAudioRouteChanged':
           if (onAudioRouteChanged != null) {
             onAudioRouteChanged(values['routing']);
@@ -858,8 +914,12 @@ class AgoraRtcEngine {
                 values['localVideoState'], values['error']);
           }
           break;
-
-        // Statistics Events
+        case 'onAudioMixingStateChanged':
+          if(onAudioMixingStateChanged != null) {
+            onAudioMixingStateChanged(values['state'], values['errorCode']);
+          }
+          break;
+      // Statistics Events
         case 'onRemoteAudioStats':
           if (onRemoteAudioStats != null) {
             Map statsValue = values['stats'];
@@ -908,7 +968,7 @@ class AgoraRtcEngine {
             stats.sentFrameRate = statsValue['sentFrameRate'];
             stats.encoderOutputFrameRate = statsValue['encoderOutputFrameRate'];
             stats.rendererOutputFrameRate =
-                statsValue['rendererOutputFrameRate'];
+            statsValue['rendererOutputFrameRate'];
             onLocalVideoStats(stats);
           }
           break;
@@ -922,7 +982,7 @@ class AgoraRtcEngine {
             stats.receivedBitrate = statsValue['receivedBitrate'];
             stats.decoderOutputFrameRate = statsValue['decoderOutputFrameRate'];
             stats.rendererOutputFrameRate =
-                statsValue['rendererOutputFrameRate'];
+            statsValue['rendererOutputFrameRate'];
             stats.rxStreamType = statsValue['rxStreamType'];
             onRemoteVideoStats(stats);
           }
@@ -939,7 +999,7 @@ class AgoraRtcEngine {
                 values['lost'], values['rxKBitRate']);
           }
           break;
-        // Miscellaneous Events
+      // Miscellaneous Events
         case 'onMediaEngineLoadSuccess':
           if (onMediaEngineLoadSuccess != null) {
             onMediaEngineLoadSuccess();

@@ -403,6 +403,86 @@ public class AgoraRtcEnginePlugin implements MethodCallHandler {
             }
             break;
 
+            case 'startAudioMixing': {
+                String filePath = call.argument("filePath");
+                Boolean loopback = call.argument("loopback");
+                Boolean replace = call.argument("replace");
+                int cycle = call.argument("cycle");
+                mRtcEngine.startAudioMixing(filePath,loopback, replace, cycle);
+                result.success(null);
+            }
+            break;
+
+            case 'stopAudioMixing': {
+                mRtcEngine.stopAudioMixing();
+                result.success(null);
+            }
+            break;
+
+            case 'pauseAudioMixing': {
+                mRtcEngine.pauseAudioMixing();
+                result.success(null);
+            }
+            break;
+
+            case 'resumeAudioMixing': {
+                mRtcEngine.resumeAudioMixing();
+                result.success(null);
+            }
+            break;
+
+            case 'adjustAudioMixingVolume': {
+                int volume = call.argument("volume");
+                mRtcEngine.adjustAudioMixingVolume(volume);
+                result.success(null);
+            }
+            break;
+
+            case 'adjustAudioMixingPlayoutVolume': {
+                int volume = call.argument("volume");
+                mRtcEngine.adjustAudioMixingPlayoutVolume(volume);
+                result.success(null);
+            }
+            break;
+
+            case 'adjustAudioMixingPublishVolume': {
+                int volume = call.argument("volume");
+                mRtcEngine.adjustAudioMixingPublishVolume(volume);
+                result.success(null);
+            }
+            break;
+
+             case 'setAudioMixingPosition': {
+                int pos = call.argument("pos");
+                mRtcEngine.'setAudioMixingPosition'(pos);
+                result.success(null);
+            }
+            break;
+
+            case 'getAudioMixingPlayoutVolume': {
+                int volume = mRtcEngine.getAudioMixingPlayoutVolume();
+                result.success(volume);
+            }
+            break;
+
+            case 'getAudioMixingPublishVolume': {
+                int volume = mRtcEngine.getAudioMixingPublishVolume();
+                result.success(volume);
+            }
+            break;
+
+            case 'getAudioMixingDuration': {
+                int duration = mRtcEngine.getAudioMixingDuration();
+                result.success(duration);
+            }
+            break;
+
+            case 'getAudioMixingCurrentPosition': {
+                int pos = mRtcEngine.getAudioMixingCurrentPosition();
+                result.success(pos);
+            }
+            break;
+
             default:
                 result.notImplemented();
         }
@@ -446,6 +526,15 @@ public class AgoraRtcEnginePlugin implements MethodCallHandler {
             map.put("uid" , uid);
             map.put("elapsed" , elapsed);
             invokeMethod("onJoinChannelSuccess" , map);
+        }
+
+        @Override
+        public void onAudioMixingStateChanged(int state , int errorCode) {
+            super.onAudioMixingStateChanged(state , errorCode);
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("errorCode" , errorCode);
+            map.put("state" , state);
+            invokeMethod("onAudioMixingStateChanged" , map);
         }
 
         @Override
