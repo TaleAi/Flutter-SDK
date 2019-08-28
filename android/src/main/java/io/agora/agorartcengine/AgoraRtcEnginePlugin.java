@@ -403,7 +403,7 @@ public class AgoraRtcEnginePlugin implements MethodCallHandler {
             }
             break;
 
-            case 'startAudioMixing': {
+            case "startAudioMixing": {
                 String filePath = call.argument("filePath");
                 Boolean loopback = call.argument("loopback");
                 Boolean replace = call.argument("replace");
@@ -413,71 +413,71 @@ public class AgoraRtcEnginePlugin implements MethodCallHandler {
             }
             break;
 
-            case 'stopAudioMixing': {
+            case "stopAudioMixing": {
                 mRtcEngine.stopAudioMixing();
                 result.success(null);
             }
             break;
 
-            case 'pauseAudioMixing': {
+            case "pauseAudioMixing": {
                 mRtcEngine.pauseAudioMixing();
                 result.success(null);
             }
             break;
 
-            case 'resumeAudioMixing': {
+            case "resumeAudioMixing": {
                 mRtcEngine.resumeAudioMixing();
                 result.success(null);
             }
             break;
 
-            case 'adjustAudioMixingVolume': {
+            case "adjustAudioMixingVolume": {
                 int volume = call.argument("volume");
                 mRtcEngine.adjustAudioMixingVolume(volume);
                 result.success(null);
             }
             break;
 
-            case 'adjustAudioMixingPlayoutVolume': {
+            case "adjustAudioMixingPlayoutVolume": {
                 int volume = call.argument("volume");
                 mRtcEngine.adjustAudioMixingPlayoutVolume(volume);
                 result.success(null);
             }
             break;
 
-            case 'adjustAudioMixingPublishVolume': {
+            case "adjustAudioMixingPublishVolume": {
                 int volume = call.argument("volume");
                 mRtcEngine.adjustAudioMixingPublishVolume(volume);
                 result.success(null);
             }
             break;
 
-             case 'setAudioMixingPosition': {
+             case "setAudioMixingPosition": {
                 int pos = call.argument("pos");
-                mRtcEngine.'setAudioMixingPosition'(pos);
+                mRtcEngine.setAudioMixingPosition(pos);
                 result.success(null);
             }
             break;
 
-            case 'getAudioMixingPlayoutVolume': {
+            case "getAudioMixingPlayoutVolume": {
                 int volume = mRtcEngine.getAudioMixingPlayoutVolume();
                 result.success(volume);
             }
             break;
 
-            case 'getAudioMixingPublishVolume': {
+            case "getAudioMixingPublishVolume": {
                 int volume = mRtcEngine.getAudioMixingPublishVolume();
                 result.success(volume);
             }
             break;
 
-            case 'getAudioMixingDuration': {
+            case "getAudioMixingDuration": {
                 int duration = mRtcEngine.getAudioMixingDuration();
                 result.success(duration);
             }
             break;
 
-            case 'getAudioMixingCurrentPosition': {
+            case "getAudioMixingCurrentPosition": {
                 int pos = mRtcEngine.getAudioMixingCurrentPosition();
                 result.success(pos);
             }
