@@ -1,26 +1,28 @@
 package io.agora.agorartcengine;
 
-import io.flutter.plugin.common.MethodCall;
-import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
-
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
-import io.agora.rtc.RtcEngine;
 import io.agora.rtc.IRtcEngineEventHandler;
+import io.agora.rtc.RtcEngine;
+import io.agora.rtc.live.LiveInjectStreamConfig;
+import io.agora.rtc.live.LiveTranscoding;
+import io.agora.rtc.video.AgoraImage;
+import io.agora.rtc.video.BeautyOptions;
 import io.agora.rtc.video.VideoCanvas;
 import io.agora.rtc.video.VideoEncoderConfiguration;
-import io.agora.rtc.video.BeautyOptions;
-
+import io.flutter.plugin.common.MethodCall;
+import io.flutter.plugin.common.MethodChannel;
+import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
+import io.flutter.plugin.common.MethodChannel.Result;
+import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.plugin.common.StandardMessageCodec;
 
 /** AgoraRtcEnginePlugin */
@@ -468,7 +470,7 @@ public class AgoraRtcEnginePlugin implements MethodCallHandler {
       HashMap<String, Object> map = new HashMap<>();
       map.put("errorCode" , errorCode);
       map.put("state" , state);
-      invokeMethod("onAudioMixingStateChanged" , map);
+      mMethodChannel.invokeMethod("onAudioMixingStateChanged" , map);
     }
 
     @Override
@@ -680,15 +682,6 @@ public class AgoraRtcEnginePlugin implements MethodCallHandler {
       map.put("height", height);
       map.put("rotation", rotation);
       mMethodChannel.invokeMethod("onVideoSizeChanged", map);
-    }
-
-    @Override
-    public void onRemoteVideoStateChanged(int uid, int state) {
-      super.onRemoteVideoStateChanged(uid, state);
-      HashMap<String, Object> map = new HashMap<>();
-      map.put("uid", uid);
-      map.put("state", state);
-      mMethodChannel.invokeMethod("onRemoteVideoStateChanged", map);
     }
 
     @Override
@@ -935,7 +928,6 @@ public class AgoraRtcEnginePlugin implements MethodCallHandler {
       map.put("width", stats.width);
       map.put("height", stats.height);
       map.put("receivedBitrate", stats.receivedBitrate);
-      map.put("receivedFrameRate", stats.receivedFrameRate);
       map.put("rxStreamType", stats.rxStreamType);
       return map;
     }
