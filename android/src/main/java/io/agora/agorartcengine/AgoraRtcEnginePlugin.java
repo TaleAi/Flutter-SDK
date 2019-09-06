@@ -30,11 +30,12 @@ public class AgoraRtcEnginePlugin implements MethodCallHandler {
 
   private final Registrar mRegistrar;
   private final MethodChannel mMethodChannel;
-  private RtcEngine mRtcEngine;
+  private static RtcEngine mRtcEngine;
   private HashMap<String, SurfaceView> mRendererViews;
+  private Handler mEventHandler = new Handler(Looper.getMainLooper());
 
-  void addView(SurfaceView view, int id) {
-    mRendererViews.put("" + id, view);
+  void addView(SurfaceView view , int id) {
+    mRendererViews.put("" + id , view);
   }
 
   private void removeView(int id) {
@@ -45,18 +46,25 @@ public class AgoraRtcEnginePlugin implements MethodCallHandler {
     return mRendererViews.get("" + id);
   }
 
-  /** Plugin registration. */
-  public static void registerWith(Registrar registrar) {
-    final MethodChannel channel = new MethodChannel(registrar.messenger(), "agora_rtc_engine");
-
-    AgoraRtcEnginePlugin plugin = new AgoraRtcEnginePlugin(registrar, channel);
-    channel.setMethodCallHandler(plugin);
-
-    AgoraRenderViewFactory fac = new AgoraRenderViewFactory(StandardMessageCodec.INSTANCE, plugin);
-    registrar.platformViewRegistry().registerViewFactory("AgoraRendererView", fac);
+  public static RtcEngine getRtcEngine() {
+    return mRtcEngine;
   }
 
-  private AgoraRtcEnginePlugin(Registrar registrar, MethodChannel channel) {
+  /**
+   * Plugin registration.
+   */
+  public static void registerWith(Registrar registrar) {
+    final MethodChannel channel = new MethodChannel(registrar.messenger() , "agora_rtc_engine");
+
+    AgoraRtcEnginePlugin plugin = new AgoraRtcEnginePlugin(registrar , channel);
+    channel.setMethodCallHandler(plugin);
+
+    AgoraRenderViewFactory fac = new AgoraRenderViewFactory(StandardMessageCodec.INSTANCE ,
+            plugin);
+    registrar.platformViewRegistry().registerViewFactory("AgoraRendererView" , fac);
+  }
+
+  private AgoraRtcEnginePlugin(Registrar registrar , MethodChannel channel) {
     this.mRegistrar = registrar;
     this.mMethodChannel = channel;
     this.mRendererViews = new HashMap<>();
@@ -64,6 +72,16 @@ public class AgoraRtcEnginePlugin implements MethodCallHandler {
 
   private Context getActiveContext() {
     return (mRegistrar.activity() != null) ? mRegistrar.activity() : mRegistrar.context();
+  }
+
+  private AgoraImage createAgoraImage(Map<String, Object> options) {
+    AgoraImage image = new AgoraImage();
+    image.url = (String) options.get("url");
+    image.height = (int) options.get("height");
+    image.width = (int) options.get("width");
+    image.x = (int) options.get("x");
+    image.y = (int) options.get("y");
+    return image;
   }
 
   @Override
@@ -442,26 +460,26 @@ public class AgoraRtcEnginePlugin implements MethodCallHandler {
     public void onWarning(int warn) {
       super.onWarning(warn);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("warn", warn);
-      mMethodChannel.invokeMethod("onWarning", map);
+      map.put("warn" , warn);
+      invokeMethod("onWarning" , map);
     }
 
     @Override
     public void onError(int err) {
       super.onError(err);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("err", err);
-      mMethodChannel.invokeMethod("onError", map);
+      map.put("err" , err);
+      invokeMethod("onError" , map);
     }
 
     @Override
-    public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
-      super.onJoinChannelSuccess(channel, uid, elapsed);
+    public void onJoinChannelSuccess(String channel , int uid , int elapsed) {
+      super.onJoinChannelSuccess(channel , uid , elapsed);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("channel", channel);
-      map.put("uid", uid);
-      map.put("elapsed", elapsed);
-      mMethodChannel.invokeMethod("onJoinChannelSuccess", map);
+      map.put("channel" , channel);
+      map.put("uid" , uid);
+      map.put("elapsed" , elapsed);
+      invokeMethod("onJoinChannelSuccess" , map);
     }
 
     @Override
@@ -470,488 +488,515 @@ public class AgoraRtcEnginePlugin implements MethodCallHandler {
       HashMap<String, Object> map = new HashMap<>();
       map.put("errorCode" , errorCode);
       map.put("state" , state);
-      mMethodChannel.invokeMethod("onAudioMixingStateChanged" , map);
+      invokeMethod("onAudioMixingStateChanged" , map);
     }
 
     @Override
-    public void onRejoinChannelSuccess(String channel, int uid, int elapsed) {
-      super.onRejoinChannelSuccess(channel, uid, elapsed);
+    public void onRejoinChannelSuccess(String channel , int uid , int elapsed) {
+      super.onRejoinChannelSuccess(channel , uid , elapsed);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("channel", channel);
-      map.put("uid", uid);
-      map.put("elapsed", elapsed);
-      mMethodChannel.invokeMethod("onRejoinChannelSuccess", map);
+      map.put("channel" , channel);
+      map.put("uid" , uid);
+      map.put("elapsed" , elapsed);
+      invokeMethod("onRejoinChannelSuccess" , map);
     }
 
     @Override
     public void onLeaveChannel(RtcStats stats) {
       super.onLeaveChannel(stats);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("stats", mapFromStats(stats));
-      mMethodChannel.invokeMethod("onLeaveChannel", map);
+      map.put("stats" , mapFromStats(stats));
+      invokeMethod("onLeaveChannel" , map);
     }
 
     @Override
-    public void onClientRoleChanged(int oldRole, int newRole) {
-      super.onClientRoleChanged(oldRole, newRole);
+    public void onClientRoleChanged(int oldRole , int newRole) {
+      super.onClientRoleChanged(oldRole , newRole);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("oldRole", oldRole);
-      map.put("newRole", newRole);
-      mMethodChannel.invokeMethod("onClientRoleChanged", map);
+      map.put("oldRole" , oldRole);
+      map.put("newRole" , newRole);
+      invokeMethod("onClientRoleChanged" , map);
     }
 
     @Override
-    public void onUserJoined(int uid, int elapsed) {
-      super.onUserJoined(uid, elapsed);
+    public void onUserJoined(int uid , int elapsed) {
+      super.onUserJoined(uid , elapsed);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("uid", uid);
-      map.put("elapsed", elapsed);
-      mMethodChannel.invokeMethod("onUserJoined", map);
+      map.put("uid" , uid);
+      map.put("elapsed" , elapsed);
+      invokeMethod("onUserJoined" , map);
     }
 
     @Override
-    public void onUserOffline(int uid, int reason) {
-      super.onUserOffline(uid, reason);
+    public void onUserOffline(int uid , int reason) {
+      super.onUserOffline(uid , reason);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("uid", uid);
-      map.put("reason", reason);
-      mMethodChannel.invokeMethod("onUserOffline", map);
+      map.put("uid" , uid);
+      map.put("reason" , reason);
+      invokeMethod("onUserOffline" , map);
     }
 
     @Override
-    public void onConnectionStateChanged(int state, int reason) {
-      super.onConnectionStateChanged(state, reason);
+    public void onConnectionStateChanged(int state , int reason) {
+      super.onConnectionStateChanged(state , reason);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("state", state);
-      map.put("reason", reason);
-      mMethodChannel.invokeMethod("onConnectionStateChanged", map);
+      map.put("state" , state);
+      map.put("reason" , reason);
+      invokeMethod("onConnectionStateChanged" , map);
     }
 
     @Override
     public void onConnectionLost() {
       super.onConnectionLost();
-      mMethodChannel.invokeMethod("onConnectionLost", null);
+      invokeMethod("onConnectionLost" , null);
     }
 
     @Override
-    public void onApiCallExecuted(int error, String api, String result) {
-      super.onApiCallExecuted(error, api, result);
+    public void onNetworkTypeChanged(int type) {
+      super.onNetworkTypeChanged(type);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("error", error);
-      map.put("api", api);
-      map.put("result", result);
-      mMethodChannel.invokeMethod("onApiCallExecuted", map);
+      map.put("type" , type);
+      invokeMethod("onNetworkTypeChanged" , map);
+    }
+
+    @Override
+    public void onApiCallExecuted(int error , String api , String result) {
+      super.onApiCallExecuted(error , api , result);
+      HashMap<String, Object> map = new HashMap<>();
+      map.put("error" , error);
+      map.put("api" , api);
+      map.put("result" , result);
+      invokeMethod("onApiCallExecuted" , map);
     }
 
     @Override
     public void onTokenPrivilegeWillExpire(String token) {
       super.onTokenPrivilegeWillExpire(token);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("token", token);
-      mMethodChannel.invokeMethod("onTokenPrivilegeWillExpire", map);
+      map.put("token" , token);
+      invokeMethod("onTokenPrivilegeWillExpire" , map);
     }
 
     @Override
     public void onRequestToken() {
       super.onRequestToken();
-      mMethodChannel.invokeMethod("onRequestToken", null);
+      invokeMethod("onRequestToken" , null);
     }
 
     @Override
-    public void onMicrophoneEnabled(boolean enabled) {
-      super.onMicrophoneEnabled(enabled);
+    public void onAudioVolumeIndication(AudioVolumeInfo[] speakers , int totalVolume) {
+      super.onAudioVolumeIndication(speakers , totalVolume);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("enabled", enabled);
-      mMethodChannel.invokeMethod("onMicrophoneEnabled", map);
-    }
-
-    @Override
-    public void onAudioVolumeIndication(AudioVolumeInfo[] speakers, int totalVolume) {
-      super.onAudioVolumeIndication(speakers, totalVolume);
-      HashMap<String, Object> map = new HashMap<>();
-      map.put("totalVolume", totalVolume);
-      map.put("speakers", arrayFromSpeakers(speakers));
-      mMethodChannel.invokeMethod("onAudioVolumeIndication", map);
+      map.put("totalVolume" , totalVolume);
+      map.put("speakers" , arrayFromSpeakers(speakers));
+      invokeMethod("onAudioVolumeIndication" , map);
     }
 
     @Override
     public void onActiveSpeaker(int uid) {
       super.onActiveSpeaker(uid);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("uid", uid);
-      mMethodChannel.invokeMethod("onActiveSpeaker", map);
+      map.put("uid" , uid);
+      invokeMethod("onActiveSpeaker" , map);
     }
 
     @Override
     public void onFirstLocalAudioFrame(int elapsed) {
       super.onFirstLocalAudioFrame(elapsed);
       HashMap<String, Object> map = new HashMap<>();
+      map.put("elapsed" , elapsed);
+      invokeMethod("onFirstLocalAudioFrame" , map);
+    }
+
+    @Override
+    public void onFirstRemoteAudioFrame(int uid , int elapsed) {
+      super.onFirstRemoteAudioFrame(uid , elapsed);
+      HashMap<String, Object> map = new HashMap<>();
+      map.put("uid" , uid);
+      map.put("elapsed" , elapsed);
+      invokeMethod("onFirstRemoteAudioFrame" , map);
+    }
+
+    @Override
+    public void onFirstRemoteAudioDecoded(int uid , int elapsed) {
+      super.onFirstRemoteAudioDecoded(uid , elapsed);
+      HashMap<String, Object> map = new HashMap<>();
+      map.put("uid" , uid);
+      map.put("elapsed" , elapsed);
+      invokeMethod("onFirstRemoteAudioDecoded" , map);
+    }
+
+    @Override
+    public void onFirstLocalVideoFrame(int width , int height , int elapsed) {
+      super.onFirstLocalVideoFrame(width , height , elapsed);
+      HashMap<String, Object> map = new HashMap<>();
+      map.put("width" , width);
+      map.put("height" , height);
+      map.put("elapsed" , elapsed);
+      invokeMethod("onFirstLocalVideoFrame" , map);
+    }
+
+    @Override
+    public void onFirstRemoteVideoFrame(int uid , int width , int height , int elapsed) {
+      super.onFirstRemoteVideoFrame(uid , width , height , elapsed);
+      HashMap<String, Object> map = new HashMap<>();
+      map.put("uid" , uid);
+      map.put("width" , width);
+      map.put("height" , height);
+      map.put("elapsed" , elapsed);
+      invokeMethod("onFirstRemoteVideoFrame" , map);
+    }
+
+    @Override
+    public void onUserMuteAudio(int uid , boolean muted) {
+      super.onUserMuteAudio(uid , muted);
+      HashMap<String, Object> map = new HashMap<>();
+      map.put("uid" , uid);
+      map.put("muted" , muted);
+      invokeMethod("onUserMuteAudio" , map);
+    }
+
+    @Override
+    public void onVideoSizeChanged(int uid , int width , int height , int rotation) {
+      super.onVideoSizeChanged(uid , width , height , rotation);
+      HashMap<String, Object> map = new HashMap<>();
+      map.put("uid" , uid);
+      map.put("width" , width);
+      map.put("height" , height);
+      map.put("rotation" , rotation);
+      invokeMethod("onVideoSizeChanged" , map);
+    }
+
+    @Override
+    public void onRemoteVideoStateChanged(int 	uid,
+                                          int 	state,
+                                          int 	reason,
+                                          int 	elapsed ) {
+      super.onRemoteVideoStateChanged(uid , state, reason, elapsed);
+      HashMap<String, Object> map = new HashMap<>();
+      map.put("uid" , uid);
+      map.put("state" , state);
+      map.put("reason", reason);
       map.put("elapsed", elapsed);
-      mMethodChannel.invokeMethod("onFirstLocalAudioFrame", map);
-    }
-
-    @Override
-    public void onFirstRemoteAudioFrame(int uid, int elapsed) {
-      super.onFirstRemoteAudioFrame(uid, elapsed);
-      HashMap<String, Object> map = new HashMap<>();
-      map.put("uid", uid);
-      map.put("elapsed", elapsed);
-      mMethodChannel.invokeMethod("onFirstRemoteAudioFrame", map);
-    }
-
-    @Override
-    public void onVideoStopped() {
-      super.onVideoStopped();
-      mMethodChannel.invokeMethod("onVideoStopped", null);
-    }
-
-    @Override
-    public void onFirstLocalVideoFrame(int width, int height, int elapsed) {
-      super.onFirstLocalVideoFrame(width, height, elapsed);
-      HashMap<String, Object> map = new HashMap<>();
-      map.put("width", width);
-      map.put("height", height);
-      map.put("elapsed", elapsed);
-      mMethodChannel.invokeMethod("onFirstLocalVideoFrame", map);
-    }
-
-    @Override
-    public void onFirstRemoteVideoDecoded(int uid, int width, int height, int elapsed) {
-      super.onFirstRemoteVideoDecoded(uid, width, height, elapsed);
-      HashMap<String, Object> map = new HashMap<>();
-      map.put("uid", uid);
-      map.put("width", width);
-      map.put("height", height);
-      map.put("elapsed", elapsed);
-      mMethodChannel.invokeMethod("onFirstRemoteVideoDecoded", map);
-    }
-
-    @Override
-    public void onFirstRemoteVideoFrame(int uid, int width, int height, int elapsed) {
-      super.onFirstRemoteVideoFrame(uid, width, height, elapsed);
-      HashMap<String, Object> map = new HashMap<>();
-      map.put("uid", uid);
-      map.put("width", width);
-      map.put("height", height);
-      map.put("elapsed", elapsed);
-      mMethodChannel.invokeMethod("onFirstRemoteVideoFrame", map);
-    }
-
-    @Override
-    public void onUserMuteAudio(int uid, boolean muted) {
-      super.onUserMuteAudio(uid, muted);
-      HashMap<String, Object> map = new HashMap<>();
-      map.put("uid", uid);
-      map.put("muted", muted);
-      mMethodChannel.invokeMethod("onUserMuteAudio", map);
-    }
-
-    @Override
-    public void onUserMuteVideo(int uid, boolean muted) {
-      super.onUserMuteVideo(uid, muted);
-      HashMap<String, Object> map = new HashMap<>();
-      map.put("uid", uid);
-      map.put("muted", muted);
-      mMethodChannel.invokeMethod("onUserMuteVideo", map);
-    }
-
-    @Override
-    public void onUserEnableVideo(int uid, boolean enabled) {
-      super.onUserEnableVideo(uid, enabled);
-      HashMap<String, Object> map = new HashMap<>();
-      map.put("uid", uid);
-      map.put("enabled", enabled);
-      mMethodChannel.invokeMethod("onUserEnableVideo", map);
-    }
-
-    @Override
-    public void onUserEnableLocalVideo(int uid, boolean enabled) {
-      super.onUserEnableLocalVideo(uid, enabled);
-      HashMap<String, Object> map = new HashMap<>();
-      map.put("uid", uid);
-      map.put("enabled", enabled);
-      mMethodChannel.invokeMethod("onUserEnableLocalVideo", map);
-    }
-
-    @Override
-    public void onVideoSizeChanged(int uid, int width, int height, int rotation) {
-      super.onVideoSizeChanged(uid, width, height, rotation);
-      HashMap<String, Object> map = new HashMap<>();
-      map.put("uid", uid);
-      map.put("width", width);
-      map.put("height", height);
-      map.put("rotation", rotation);
-      mMethodChannel.invokeMethod("onVideoSizeChanged", map);
+      invokeMethod("onRemoteVideoStateChanged" , map);
     }
 
     @Override
     public void onLocalPublishFallbackToAudioOnly(boolean isFallbackOrRecover) {
       super.onLocalPublishFallbackToAudioOnly(isFallbackOrRecover);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("isFallbackOrRecover", isFallbackOrRecover);
-      mMethodChannel.invokeMethod("onLocalPublishFallbackToAudioOnly", map);
+      map.put("isFallbackOrRecover" , isFallbackOrRecover);
+      invokeMethod("onLocalPublishFallbackToAudioOnly" , map);
     }
 
     @Override
-    public void onRemoteSubscribeFallbackToAudioOnly(int uid, boolean isFallbackOrRecover) {
-      super.onRemoteSubscribeFallbackToAudioOnly(uid, isFallbackOrRecover);
+    public void onRemoteSubscribeFallbackToAudioOnly(int uid , boolean isFallbackOrRecover) {
+      super.onRemoteSubscribeFallbackToAudioOnly(uid , isFallbackOrRecover);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("uid", uid);
-      map.put("isFallbackOrRecover", isFallbackOrRecover);
-      mMethodChannel.invokeMethod("onRemoteSubscribeFallbackToAudioOnly", map);
+      map.put("uid" , uid);
+      map.put("isFallbackOrRecover" , isFallbackOrRecover);
+      invokeMethod("onRemoteSubscribeFallbackToAudioOnly" , map);
     }
 
     @Override
     public void onAudioRouteChanged(int routing) {
       super.onAudioRouteChanged(routing);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("routing", routing);
-      mMethodChannel.invokeMethod("onAudioRouteChanged", map);
-    }
-
-    @Override
-    public void onCameraReady() {
-      super.onCameraReady();
-      mMethodChannel.invokeMethod("onCameraReady", null);
+      map.put("routing" , routing);
+      invokeMethod("onAudioRouteChanged" , map);
     }
 
     @Override
     public void onCameraFocusAreaChanged(Rect rect) {
       super.onCameraFocusAreaChanged(rect);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("rect", mapFromRect(rect));
-      mMethodChannel.invokeMethod("onCameraFocusAreaChanged", map);
+      map.put("rect" , mapFromRect(rect));
+      invokeMethod("onCameraFocusAreaChanged" , map);
     }
 
     @Override
     public void onCameraExposureAreaChanged(Rect rect) {
       super.onCameraExposureAreaChanged(rect);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("rect", mapFromRect(rect));
-      mMethodChannel.invokeMethod("onCameraExposureAreaChanged", map);
+      map.put("rect" , mapFromRect(rect));
+      invokeMethod("onCameraExposureAreaChanged" , map);
+    }
+
+    @Override
+    public void onLocalAudioStateChanged(int state, int error) {
+      super.onLocalAudioStateChanged(state, error);
+      HashMap<String, Object> map = new HashMap<>();
+      map.put("state" , state);
+      map.put("error" , error);
+      invokeMethod("onLocalAudioStateChanged", map);
+    }
+
+    @Override
+    public void onRemoteAudioStateChanged(int uid, int state, int reason, int elapsed) {
+      super.onRemoteAudioStateChanged(uid, state, reason, elapsed);
+      HashMap<String, Object> map = new HashMap<>();
+      map.put("uid" , uid);
+      map.put("state" , state);
+      map.put("reason" , reason);
+      map.put("elapsed" , elapsed);
+      invokeMethod("onRemoteAudioStateChanged", map);
+    }
+
+    @Override
+    public void onRtmpStreamingStateChanged(String 	url,
+                                            int 	state,
+                                            int 	errCode ) {
+      super.onRtmpStreamingStateChanged(url, state, errCode);
+      HashMap<String, Object> map = new HashMap<>();
+      map.put("url", url);
+      map.put("state", state);
+      map.put("error", errCode);
+      invokeMethod("onRtmpStreamingStateChanged", map);
     }
 
     @Override
     public void onRtcStats(RtcStats stats) {
       super.onRtcStats(stats);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("stats", mapFromStats(stats));
-      mMethodChannel.invokeMethod("onRtcStats", map);
+      map.put("stats" , mapFromStats(stats));
+      invokeMethod("onRtcStats" , map);
     }
 
     @Override
     public void onLastmileQuality(int quality) {
       super.onLastmileQuality(quality);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("quality", quality);
-      mMethodChannel.invokeMethod("onLastmileQuality", map);
+      map.put("quality" , quality);
+      invokeMethod("onLastmileQuality" , map);
     }
 
     @Override
-    public void onNetworkQuality(int uid, int txQuality, int rxQuality) {
-      super.onNetworkQuality(uid, txQuality, rxQuality);
+    public void onNetworkQuality(int uid , int txQuality , int rxQuality) {
+      super.onNetworkQuality(uid , txQuality , rxQuality);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("uid", uid);
-      map.put("txQuality", txQuality);
-      map.put("rxQuality", rxQuality);
-      mMethodChannel.invokeMethod("onNetworkQuality", map);
+      map.put("uid" , uid);
+      map.put("txQuality" , txQuality);
+      map.put("rxQuality" , rxQuality);
+      invokeMethod("onNetworkQuality" , map);
     }
 
     @Override
     public void onLocalVideoStats(LocalVideoStats stats) {
       super.onLocalVideoStats(stats);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("stats", mapFromLocalVideoStats(stats));
-      mMethodChannel.invokeMethod("onLocalVideoStats", map);
+      map.put("stats" , mapFromLocalVideoStats(stats));
+      invokeMethod("onLocalVideoStats" , map);
+    }
+
+    @Override
+    public void onLocalAudioStats(LocalAudioStats stats) {
+      super.onLocalAudioStats(stats);
+      HashMap<String, Object> map = new HashMap<>();
+      map.put("stats" , mapFromLocalAudioStats(stats));
+      invokeMethod("onLocalAudioStats" , map);
     }
 
     @Override
     public void onRemoteVideoStats(RemoteVideoStats stats) {
       super.onRemoteVideoStats(stats);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("stats", mapFromRemoteVideoStats(stats));
-      mMethodChannel.invokeMethod("onRemoteVideoStats", map);
+      map.put("stats" , mapFromRemoteVideoStats(stats));
+      invokeMethod("onRemoteVideoStats" , map);
     }
 
     @Override
     public void onRemoteAudioStats(RemoteAudioStats stats) {
       super.onRemoteAudioStats(stats);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("stats", mapFromRemoteAudioStats(stats));
-      mMethodChannel.invokeMethod("onRemoteAudioStats", map);
+      map.put("stats" , mapFromRemoteAudioStats(stats));
+      invokeMethod("onRemoteAudioStats" , map);
     }
 
     @Override
-    public void onRemoteAudioTransportStats(int uid, int delay, int lost, int rxKBitRate) {
-      super.onRemoteAudioTransportStats(uid, delay, lost, rxKBitRate);
+    public void onLocalVideoStateChanged(int localVideoState , int error) {
+      super.onLocalVideoStateChanged(localVideoState , error);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("uid", uid);
-      map.put("delay", delay);
-      map.put("lost", lost);
-      map.put("rxKBitRate", rxKBitRate);
-      mMethodChannel.invokeMethod("onRemoteAudioTransportStats", map);
-    }
-
-    @Override
-    public void onRemoteVideoTransportStats(int uid, int delay, int lost, int rxKBitRate) {
-      super.onRemoteVideoTransportStats(uid, delay, lost, rxKBitRate);
-      HashMap<String, Object> map = new HashMap<>();
-      map.put("uid", uid);
-      map.put("delay", delay);
-      map.put("lost", lost);
-      map.put("rxKBitRate", rxKBitRate);
-      mMethodChannel.invokeMethod("onRemoteVideoTransportStats", map);
-    }
-
-    @Override
-    public void onAudioMixingFinished() {
-      super.onAudioMixingFinished();
-      mMethodChannel.invokeMethod("onAudioMixingFinished", null);
+      map.put("localVideoState" , localVideoState);
+      map.put("error" , error);
+      invokeMethod("onLocalVideoStateChanged" , map);
     }
 
     @Override
     public void onAudioEffectFinished(int soundId) {
       super.onAudioEffectFinished(soundId);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("soundId", soundId);
-      mMethodChannel.invokeMethod("onAudioEffectFinished", map);
+      map.put("soundId" , soundId);
+      invokeMethod("onAudioEffectFinished" , map);
     }
 
     @Override
-    public void onStreamPublished(String url, int error) {
-      super.onStreamPublished(url, error);
+    public void onStreamPublished(String url , int error) {
+      super.onStreamPublished(url , error);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("url", url);
-      map.put("error", error);
-      mMethodChannel.invokeMethod("onStreamPublished", map);
+      map.put("url" , url);
+      map.put("error" , error);
+      invokeMethod("onStreamPublished" , map);
     }
 
     @Override
     public void onStreamUnpublished(String url) {
       super.onStreamUnpublished(url);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("url", url);
-      mMethodChannel.invokeMethod("onStreamUnpublished", map);
+      map.put("url" , url);
+      invokeMethod("onStreamUnpublished" , map);
     }
 
     @Override
     public void onTranscodingUpdated() {
       super.onTranscodingUpdated();
-      mMethodChannel.invokeMethod("onTranscodingUpdated", null);
+      invokeMethod("onTranscodingUpdated" , null);
     }
 
     @Override
-    public void onStreamInjectedStatus(String url, int uid, int status) {
-      super.onStreamInjectedStatus(url, uid, status);
+    public void onStreamInjectedStatus(String url , int uid , int status) {
+      super.onStreamInjectedStatus(url , uid , status);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("url", url);
-      map.put("uid", uid);
-      map.put("status", status);
-      mMethodChannel.invokeMethod("onStreamInjectedStatus", map);
+      map.put("url" , url);
+      map.put("uid" , uid);
+      map.put("status" , status);
+      invokeMethod("onStreamInjectedStatus" , map);
     }
 
     @Override
-    public void onStreamMessage(int uid, int streamId, byte[] data) {
-      super.onStreamMessage(uid, streamId, data);
+    public void onStreamMessage(int uid , int streamId , byte[] data) {
+      super.onStreamMessage(uid , streamId , data);
       try {
-        String message = new String(data, "UTF-8");
+        String message = new String(data , "UTF-8");
         HashMap<String, Object> map = new HashMap<>();
-        map.put("streamId", streamId);
-        map.put("uid", uid);
-        map.put("message", message);
-        mMethodChannel.invokeMethod("onStreamMessage", map);
+        map.put("streamId" , streamId);
+        map.put("uid" , uid);
+        map.put("message" , message);
+        invokeMethod("onStreamMessage" , map);
       } catch (Exception e) {
-          e.printStackTrace();
+        e.printStackTrace();
       }
     }
 
     @Override
-    public void onStreamMessageError(int uid, int streamId, int error, int missed, int cached) {
-      super.onStreamMessageError(uid, streamId, error, missed, cached);
+    public void onStreamMessageError(int uid , int streamId , int error , int missed ,
+                                     int cached) {
+      super.onStreamMessageError(uid , streamId , error , missed , cached);
       HashMap<String, Object> map = new HashMap<>();
-      map.put("uid", uid);
-      map.put("streamId", streamId);
-      map.put("error", error);
-      map.put("missed", missed);
-      map.put("cached", cached);
-      mMethodChannel.invokeMethod("onStreamMessageError", map);
+      map.put("uid" , uid);
+      map.put("streamId" , streamId);
+      map.put("error" , error);
+      map.put("missed" , missed);
+      map.put("cached" , cached);
+      invokeMethod("onStreamMessageError" , map);
     }
 
     @Override
     public void onMediaEngineLoadSuccess() {
       super.onMediaEngineLoadSuccess();
-      mMethodChannel.invokeMethod("onMediaEngineLoadSuccess", null);
+      invokeMethod("onMediaEngineLoadSuccess" , null);
     }
 
     @Override
     public void onMediaEngineStartCallSuccess() {
       super.onMediaEngineStartCallSuccess();
-      mMethodChannel.invokeMethod("onMediaEngineStartCallSuccess", null);
+      invokeMethod("onMediaEngineStartCallSuccess" , null);
     }
 
     private HashMap<String, Object> mapFromStats(RtcStats stats) {
       HashMap<String, Object> map = new HashMap<>();
-      map.put("duration", stats.totalDuration);
-      map.put("txBytes", stats.txBytes);
-      map.put("rxBytes", stats.rxBytes);
-      map.put("txAudioKBitrate", stats.txAudioKBitRate);
-      map.put("rxAudioKBitrate", stats.rxAudioKBitRate);
-      map.put("txVideoKBitrate", stats.txVideoKBitRate);
-      map.put("rxVideoKBitrate", stats.rxVideoKBitRate);
-      map.put("lastmileDelay", stats.lastmileDelay);
-      map.put("userCount", stats.users);
-      map.put("cpuAppUsage", stats.cpuAppUsage);
-      map.put("cpuTotalUsage", stats.cpuTotalUsage);
+      map.put("totalDuration" , stats.totalDuration);
+      map.put("txBytes" , stats.txBytes);
+      map.put("rxBytes" , stats.rxBytes);
+      map.put("txAudioBytes", stats.txAudioBytes);
+      map.put("txVideoBytes", stats.txVideoBytes);
+      map.put("rxAudioBytes", stats.rxAudioBytes);
+      map.put("rxVideoBytes", stats.rxVideoBytes);
+      map.put("txKBitrate", stats.txKBitRate);
+      map.put("rxKBitrate", stats.rxKBitRate);
+      map.put("txAudioKBitrate" , stats.txAudioKBitRate);
+      map.put("rxAudioKBitrate" , stats.rxAudioKBitRate);
+      map.put("txVideoKBitrate" , stats.txVideoKBitRate);
+      map.put("rxVideoKBitrate" , stats.rxVideoKBitRate);
+      map.put("lastmileDelay" , stats.lastmileDelay);
+      map.put("txPacketLossRate" , stats.txPacketLossRate);
+      map.put("rxPacketLossRate" , stats.rxPacketLossRate);
+      map.put("users" , stats.users);
+      map.put("cpuAppUsage" , stats.cpuAppUsage);
+      map.put("cpuTotalUsage" , stats.cpuTotalUsage);
       return map;
     }
 
     private HashMap<String, Object> mapFromRect(Rect rect) {
       HashMap<String, Object> map = new HashMap<>();
 
-      map.put("x", rect.left);
-      map.put("y", rect.top);
-      map.put("width", rect.width());
-      map.put("height", rect.height());
+      map.put("x" , rect.left);
+      map.put("y" , rect.top);
+      map.put("width" , rect.width());
+      map.put("height" , rect.height());
       return map;
     }
 
     private HashMap<String, Object> mapFromLocalVideoStats(LocalVideoStats stats) {
       HashMap<String, Object> map = new HashMap<>();
-      map.put("sentBitrate", stats.sentBitrate);
-      map.put("sentFrameRate", stats.sentFrameRate);
+      map.put("sentBitrate" , stats.sentBitrate);
+      map.put("sentFrameRate" , stats.sentFrameRate);
+      map.put("encoderOutputFrameRate" , stats.encoderOutputFrameRate);
+      map.put("rendererOutputFrameRate" , stats.rendererOutputFrameRate);
+      map.put("sentTargetBitrate", stats.targetBitrate);
+      map.put("sentTargetFrameRate", stats.targetFrameRate);
+      map.put("qualityAdaptIndication", stats.targetBitrate);
+      map.put("encodedBitrate", stats.targetBitrate);
+      map.put("encodedFrameWidth", stats.targetBitrate);
+      map.put("encodedFrameHeight", stats.encodedFrameHeight);
+      map.put("encodedFrameCount", stats.encodedFrameCount);
+      map.put("codecType", stats.codecType);
+      return map;
+    }
+
+    private HashMap<String, Object> mapFromLocalAudioStats(LocalAudioStats stats) {
+      HashMap<String, Object> map = new HashMap<>();
+      map.put("numChannels", stats.numChannels);
+      map.put("sentSampleRate", stats.sentSampleRate);
+      map.put("sentBitrate" , stats.sentBitrate);
       return map;
     }
 
     private HashMap<String, Object> mapFromRemoteVideoStats(RemoteVideoStats stats) {
       HashMap<String, Object> map = new HashMap<>();
-      map.put("uid", stats.uid);
-      map.put("width", stats.width);
-      map.put("height", stats.height);
-      map.put("receivedBitrate", stats.receivedBitrate);
+      map.put("uid" , stats.uid);
+      map.put("width" , stats.width);
+      map.put("height" , stats.height);
+      map.put("receivedBitrate" , stats.receivedBitrate);
+      map.put("decoderOutputFrameRate" , stats.decoderOutputFrameRate);
+      map.put("rendererOutputFrameRate" , stats.rendererOutputFrameRate);
+      map.put("packetLossRate", stats.packetLossRate);
+      map.put("rxStreamType", stats.rxStreamType);
+      map.put("totalFrozenTime", stats.totalFrozenTime);
+      map.put("frozenRate", stats.frozenRate);
       map.put("rxStreamType", stats.rxStreamType);
       return map;
     }
 
     private HashMap<String, Object> mapFromRemoteAudioStats(RemoteAudioStats stats) {
       HashMap<String, Object> map = new HashMap<>();
-      map.put("uid", stats.uid);
-      map.put("quality", stats.quality);
-      map.put("networkTransportDelay", stats.networkTransportDelay);
-      map.put("jitterBufferDelay", stats.jitterBufferDelay);
-      map.put("audioLossRate", stats.audioLossRate);
+      map.put("uid" , stats.uid);
+      map.put("quality" , stats.quality);
+      map.put("networkTransportDelay" , stats.networkTransportDelay);
+      map.put("jitterBufferDelay" , stats.jitterBufferDelay);
+      map.put("audioLossRate" , stats.audioLossRate);
       return map;
     }
 
     private ArrayList<HashMap<String, Object>> arrayFromSpeakers(AudioVolumeInfo[] speakers) {
       ArrayList<HashMap<String, Object>> list = new ArrayList<>();
 
-        for (AudioVolumeInfo info: speakers) {
-            HashMap<String, Object> map = new HashMap<>();
-            map.put("uid", info.uid);
-            map.put("volume", info.volume);
+      for (AudioVolumeInfo info : speakers) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("uid" , info.uid);
+        map.put("volume" , info.volume);
 
-            list.add(map);
-        }
+        list.add(map);
+      }
 
       return list;
     }
@@ -959,29 +1004,80 @@ public class AgoraRtcEnginePlugin implements MethodCallHandler {
 
   private BeautyOptions beautyOptionsFromMap(HashMap<String, Object> map) {
     BeautyOptions options = new BeautyOptions();
-    options.lighteningContrastLevel = ((Double)(map.get("lighteningContrastLevel"))).intValue();
-    options.lighteningLevel = ((Double)(map.get("lighteningLevel"))).floatValue();
-    options.smoothnessLevel = ((Double)(map.get("smoothnessLevel"))).floatValue();
-    options.rednessLevel = ((Double)(map.get("rednessLevel"))).floatValue();
+    options.lighteningContrastLevel =
+            ((Double) (map.get("lighteningContrastLevel"))).intValue();
+    options.lighteningLevel = ((Double) (map.get("lighteningLevel"))).floatValue();
+    options.smoothnessLevel = ((Double) (map.get("smoothnessLevel"))).floatValue();
+    options.rednessLevel = ((Double) (map.get("rednessLevel"))).floatValue();
     return options;
   }
 
   private VideoEncoderConfiguration videoEncoderConfigurationFromMap(HashMap<String, Object> map) {
-    int width = (int)(map.get("width"));
-    int height = (int)(map.get("height"));
-    int frameRate = (int)(map.get("frameRate"));
-    int bitrate = (int)(map.get("bitrate"));
-    int minBitrate = (int)(map.get("minBitrate"));
-    int orientationMode = (int)(map.get("orientationMode"));
+    int width = (int) (map.get("width"));
+    int height = (int) (map.get("height"));
+    int frameRate = (int) (map.get("frameRate"));
+    int bitrate = (int) (map.get("bitrate"));
+    int minBitrate = (int) (map.get("minBitrate"));
+    int orientationMode = (int) (map.get("orientationMode"));
 
     VideoEncoderConfiguration configuration = new VideoEncoderConfiguration();
-    configuration.dimensions = new VideoEncoderConfiguration.VideoDimensions(width, height);
+    configuration.dimensions = new VideoEncoderConfiguration.VideoDimensions(width , height);
     configuration.frameRate = frameRate;
     configuration.bitrate = bitrate;
     configuration.minBitrate = minBitrate;
     configuration.orientationMode = orientationFromValue(orientationMode);
 
     return configuration;
+  }
+
+  private void invokeMethod(final String method , final HashMap map) {
+    mEventHandler.post(new Runnable() {
+      @Override
+      public void run() {
+        mMethodChannel.invokeMethod(method , map);
+      }
+    });
+  }
+
+  private static class MethodResultWrapper implements MethodChannel.Result {
+    private MethodChannel.Result mResult;
+    private Handler mHandler;
+
+    MethodResultWrapper(MethodChannel.Result result , Handler handler) {
+      this.mResult = result;
+      this.mHandler = handler;
+    }
+
+    @Override
+    public void success(final Object result) {
+      mHandler.post(new Runnable() {
+        @Override
+        public void run() {
+          mResult.success(result);
+        }
+      });
+    }
+
+    @Override
+    public void error(final String errorCode , final String errorMessage ,
+                      final Object errorDetails) {
+      mHandler.post(new Runnable() {
+        @Override
+        public void run() {
+          mResult.error(errorCode , errorMessage , errorDetails);
+        }
+      });
+    }
+
+    @Override
+    public void notImplemented() {
+      mHandler.post(new Runnable() {
+        @Override
+        public void run() {
+          mResult.notImplemented();
+        }
+      });
+    }
   }
 }
 
