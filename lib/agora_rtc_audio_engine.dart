@@ -647,6 +647,31 @@ class AgoraRtcEngine {
         return 1;
     }
   }
+
+  static int _intLocalVoiceChangere(VoiceChanger changer) {
+    switch (changer) {
+      case VoiceChanger.VOICE_CHANGER_OLDMAN:
+        return 1;
+        break;
+      case VoiceChanger.VOICE_CHANGER_BABYBOY:
+        return 2;
+        break;
+      case VoiceChanger.VOICE_CHANGER_BABYGILR:
+        return 3;
+        break;
+      case VoiceChanger.VOICE_CHANGER_ZHUBAJIE:
+        return 4;
+        break;
+      case VoiceChanger.VOICE_CHANGER_ETHEREAL:
+        return 5;
+        break;
+      case VoiceChanger.VOICE_CHANGER_HULK:
+        return 6;
+        break;
+      default:
+        return 0;
+    }
+  }
 }
 
 class AudioVolumeInfo {
