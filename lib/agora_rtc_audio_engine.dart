@@ -125,6 +125,8 @@ class AgoraRtcEngine {
   static void Function(int uid, int delay, int lost, int rxKBitRate)
       onRemoteAudioTransportStats;
 
+  static void Function(int state, int errorCode) onAudioMixingStateChanged;
+
   // Miscellaneous Events
   /// Occurs when the media engine is loaded.
   static VoidCallback onMediaEngineLoadSuccess;
@@ -239,6 +241,79 @@ class AgoraRtcEngine {
   static Future<void> setAudioProfile(AudioProfile profile, AudioScenario scenario) async {
     await _channel.invokeMethod(
         'setAudioProfile', {'profile': profile.index, 'scenario': scenario.index});
+  }
+
+  /// 播放音效文件
+  ///
+  /// 个人实现
+  static Future<void> startAudioMixing(String filePath, bool loopback,
+      bool replace, {int cycle = -1}) async {
+    await _channel.invokeMethod(
+        'startAudioMixing',
+        {
+          'filePath': filePath,
+          'loopback': loopback,
+          'replace': replace,
+          'cycle': cycle,
+        });
+  }
+
+  static Future<void> stopAudioMixing() async {
+    await _channel.invokeMethod(
+        'stopAudioMixing');
+  }
+
+  static Future<void> pauseAudioMixing() async {
+    await _channel.invokeMethod(
+        'pauseAudioMixing');
+  }
+
+  static Future<void> resumeAudioMixing() async {
+    await _channel.invokeMethod(
+        'resumeAudioMixing');
+  }
+
+  static Future<void> adjustAudioMixingVolume(int volume) async {
+    await _channel.invokeMethod(
+        'adjustAudioMixingVolume', {'volume': volume});
+  }
+
+  static Future<void> adjustAudioMixingPlayoutVolume(int volume) async {
+    await _channel.invokeMethod(
+        'adjustAudioMixingPlayoutVolume', {'volume': volume});
+  }
+
+  static Future<void> adjustAudioMixingPublishVolume(int volume) async {
+    await _channel.invokeMethod(
+        'adjustAudioMixingPublishVolume', {'volume': volume});
+  }
+
+  static Future<int> getAudioMixingPlayoutVolume() async {
+    final int volume = await _channel.invokeMethod(
+        'getAudioMixingPlayoutVolume');
+    return volume;
+  }
+
+  static Future<int> getAudioMixingPublishVolume() async {
+    final int volume = await _channel.invokeMethod(
+        'getAudioMixingPublishVolume');
+  }
+
+  static Future<int> getAudioMixingDuration() async {
+    final int volume = await _channel.invokeMethod(
+        'getAudioMixingDuration');
+    return volume;
+  }
+
+  static Future<int> getAudioMixingCurrentPosition() async {
+    final int pos = await _channel.invokeMethod(
+        'getAudioMixingCurrentPosition');
+    return pos;
+  }
+
+  static Future<int> setAudioMixingPosition(int pos) async {
+    await _channel.invokeMethod(
+        'setAudioMixingPosition', {'pos': pos});
   }
 
   /// Adjusts the recording volume.
