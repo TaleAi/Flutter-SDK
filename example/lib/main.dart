@@ -80,7 +80,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _initAgoraRtcEngine() async {
-    AgoraRtcEngine.create('YOUR APP ID');
+    AgoraRtcEngine.create('c15ecc21030541409abc3beeb11042c8');
 
     AgoraRtcEngine.enableVideo();
     AgoraRtcEngine.enableAudio();
