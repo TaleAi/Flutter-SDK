@@ -227,6 +227,11 @@ public class AgoraRtcEnginePlugin implements MethodCallHandler {
         mRtcEngine.setLocalRenderMode(mode);
       }
       break;
+      case "setLocalVoiceChanger": {
+        int changer = call.argument("changer");
+        mRtcEngine.setLocalVoiceChanger(changer);
+        result.success(null);
+      }
       case "setRemoteRenderMode": {
         int uid = call.argument("uid");
         int mode = call.argument("mode");

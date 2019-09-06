@@ -243,6 +243,12 @@ class AgoraRtcEngine {
         'setAudioProfile', {'profile': profile.index, 'scenario': scenario.index});
   }
 
+  /// Sets the local voice changer option.
+  static Future<void> setLocalVoiceChanger(VoiceChanger changer) async {
+    await _channel.invokeMethod(
+        'setLocalVoiceChanger', {'changer': _intLocalVoiceChangere(changer)});
+  }
+
   /// 播放音效文件
   ///
   /// 个人实现
@@ -793,6 +799,29 @@ enum ChannelProfile {
 }
 
 enum ClientRole { Broadcaster, Audience, }
+
+enum VoiceChanger {
+  /// The original voice (no local voice change).
+  VOICE_CHANGER_OFF,
+
+  /// An old man's voice.
+  VOICE_CHANGER_OLDMAN,
+
+  /// A little boy's voice.
+  VOICE_CHANGER_BABYBOY,
+
+  ///A little girl's voice.
+  VOICE_CHANGER_BABYGILR,
+
+  /// Zhu Bajie's voice (Zhu Bajie is a character from Journey to the West who has a voice like a growling bear).
+  VOICE_CHANGER_ZHUBAJIE,
+
+  /// Ethereal vocal effects.
+  VOICE_CHANGER_ETHEREAL,
+
+  /// Hulk's voice.
+  VOICE_CHANGER_HULK
+}
 
 enum VideoOutputOrientationMode {
   /// Adaptive mode.
